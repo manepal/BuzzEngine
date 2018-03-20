@@ -4,26 +4,28 @@
 #include <GL\glew.h>
 #include <string>
 
-
-class Texture2D
+namespace BUZZ
 {
-public:
-	Texture2D();
-	virtual ~Texture2D();
+	class Texture2D
+	{
+	public:
+		Texture2D();
+		virtual ~Texture2D();
 
-	bool loadTexture(const std::string& filename, bool generateMipmaps = true);
-	void bind(GLuint texUnit = 0);
-	void unbind(GLuint texUnit = 0);
+		bool loadTexture(const std::string& filename, bool generateMipmaps = true);
+		void bind(GLuint texUnit = 0);
+		void unbind(GLuint texUnit = 0);
 
-	// getters
-	int getWidth();
-	int getHeight();
+		// getters
+		int getWidth();
+		int getHeight();
 
-private:
-	GLuint mTexture;
-	int mWidth;
-	int mHeight;
-};
+	private:
+		GLuint mTexture;
+		int mWidth;
+		int mHeight;
+	};
+}
 
 
 #endif // TEXTURE_2D_H

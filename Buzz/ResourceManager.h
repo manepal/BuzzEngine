@@ -8,13 +8,16 @@
 
 #include "Texture2D.h"
 
-class ResourceManager
+namespace BUZZ
 {
-public:
-	static const std::shared_ptr<Texture2D> getTexture(const std::string& texturePath);
-private:
-	static std::map<std::string, std::shared_ptr<Texture2D>> mTextureCache;
-};
+	class ResourceManager
+	{
+	public:
+		static const std::shared_ptr<Texture2D> getTexture(const std::string& texturePath);
+	private:
+		static std::map<std::string, std::shared_ptr<Texture2D>> mTextureCache;
+	};
+}
 
 
 #endif // RESOURCE_MANAGER_H
