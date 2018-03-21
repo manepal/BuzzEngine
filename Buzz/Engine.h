@@ -7,6 +7,9 @@
 
 #include <string>
 
+#include "IApplication.h"
+#include "Window.h"
+
 namespace BUZZ
 {
 	class Engine
@@ -14,15 +17,24 @@ namespace BUZZ
 	public:
 		static Engine* getInstance();
 
-		bool startUp(const std::string& title, int width, int height, bool fullscreen = false);
-		void shutDown();
+		bool startup(IApplication* application);
+		void run();
+		void shutdown();
 
 	private:
-		Engine() {}
+		Engine() {
+			mWindow = Window::getInstance();
+		}
 
-		std::string mAppTitle;
-		int mWidth;
-		int mHeight;
+		IApplication* mApplication;
+		Window* mWindow;
+
+		float mFPS;
+		float mDeltaTime;
+		float mCurrentTime;
+		float mPreviousTime;
+
+		void showFPS();
 	};
 }
 
