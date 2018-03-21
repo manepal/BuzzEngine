@@ -12,7 +12,7 @@ namespace BUZZ
 		glfwDestroyWindow(mWindow);
 	}
 
-	Window * Window::getInstance()
+	Window* Window::getInstance()
 	{
 		static Window* mInstance = new Window();
 
