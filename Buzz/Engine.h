@@ -34,7 +34,10 @@ namespace BUZZ
 		float mCurrentTime;
 		float mPreviousTime;
 
-		void showFPS();
+		void calculateFPS();
+		void showFPS(float interval);
+
+		void render();
 	};
 }
 

@@ -56,12 +56,14 @@ namespace BUZZ
 				mDeltaTime = mCurrentTime - previousTime;
 			} while (mDeltaTime < 1.0f / MAX_FPS);
 
-			showFPS();
+			calculateFPS();
+			showFPS(0.5f);
 			previousTime = mCurrentTime;
 			// ------------------------------------------
 
 			mApplication->update(mDeltaTime);
-			mApplication->draw();
+			// draw everything on the screen
+			render();
 		}
 
 		mApplication->shutdown();
@@ -73,7 +75,7 @@ namespace BUZZ
 		glfwTerminate();
 	}
 
-	void Engine::showFPS()
+	void Engine::calculateFPS()
 	{
 		static const int NUM_SAMPLES = 10;
 		static float frameTimes[NUM_SAMPLES];
@@ -110,12 +112,15 @@ namespace BUZZ
 		{
 			mFPS = 0.0f;
 		}
+	}
 
+	void Engine::showFPS(float interval)
+	{
 		// display fps twice every second
 		static float elapsedTime = 0.0f;
 		elapsedTime += mDeltaTime;
 
-		if (elapsedTime >= 0.5f)
+		if (elapsedTime >= interval)
 		{
 			std::ostringstream outs;
 			outs.precision(3);
@@ -127,5 +132,17 @@ namespace BUZZ
 
 			elapsedTime = 0.0f;
 		}
+	}
+
+	void Engine::render()
+	{
+		glClearColor(0.0f, 0.5f, 0.8f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		mApplication->render();
+
+		glfwSwapBuffers(mWindow->getWindowHandle());
 	}
 }
