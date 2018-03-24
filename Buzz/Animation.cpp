@@ -5,32 +5,32 @@
 namespace BUZZ
 {
 	Animation::Animation(float interval) :
-		mInterval(interval),
-		mCurrentFrameIndex(0)
+		m_interval(interval),
+		m_currentFrameIndex(0)
 	{
 	}
 
 	Animation::~Animation()
 	{
-		mFrames.clear();
+		m_frames.clear();
 	}
 
 	void Animation::addFrame(const std::string& texturePath)
 	{
-		std::shared_ptr<Sprite> animFrame(new Sprite);
-		animFrame->load(texturePath);
+		std::shared_ptr<Sprite> animFrame(new Sprite(texturePath));
+		animFrame->load();
 
-		mFrames.push_back(animFrame);
+		m_frames.push_back(animFrame);
 	}
 
 	void Animation::setInterval(float interval)
 	{
-		mInterval = interval;
+		m_interval = interval;
 	}
 
 	void Animation::reset()
 	{
-		mCurrentFrameIndex = 0;
+		m_currentFrameIndex = 0;
 	}
 
 	void Animation::update(float dt)
@@ -39,16 +39,16 @@ namespace BUZZ
 
 		duration += dt;
 
-		if (duration >= mInterval)
+		if (duration >= m_interval)
 		{
-			mCurrentFrameIndex++;
-			mCurrentFrameIndex %= mFrames.size();
+			m_currentFrameIndex++;
+			m_currentFrameIndex %= m_frames.size();
 			duration = 0.0f;
 		}
 	}
 
 	void Animation::draw()
 	{
-		mFrames[mCurrentFrameIndex]->draw();
+		m_frames[m_currentFrameIndex]->draw();
 	}
 }

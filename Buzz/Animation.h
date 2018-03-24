@@ -24,10 +24,10 @@ namespace BUZZ
 		void draw();
 
 	private:
-		float mInterval;
-		int mCurrentFrameIndex;
+		float m_interval;
+		int m_currentFrameIndex;
 
-		std::vector<std::shared_ptr<Sprite>> mFrames;
+		std::vector<std::shared_ptr<Sprite>> m_frames;
 	};
 }
 

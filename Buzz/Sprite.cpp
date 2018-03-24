@@ -8,99 +8,121 @@
 
 namespace BUZZ
 {
-	GLushort Sprite::mIndices[6] = {
+	GLushort Sprite::m_indices[6] = {
 		0, 1, 2,
 		2, 3, 0
 	};
 
 	Sprite::Sprite() :
-		mVBO(0),
-		mIBO(0),
-		mVAO(0)
+		m_vbo(0),
+		m_ibo(0),
+		m_vao(0),
+		m_position(glm::vec3(0.0f))
 	{
+		m_color.r = 255;
+		m_color.g = 255;
+		m_color.b = 255;
+		m_color.a = 255;
+
+		m_width = 50.0f;
+		m_height = 50.0f;
+
+		m_texturePath = "";
+	}
+
+	Sprite::Sprite(GLubyte r, GLubyte g, GLubyte b, GLubyte a):
+		m_vbo(0),
+		m_ibo(0),
+		m_vao(0),
+		m_position(glm::vec3(0.0f))
+	{
+		m_color.r = r;
+		m_color.g = g;
+		m_color.b = b;
+		m_color.a = a;
+		
+		m_width = 50.0f;
+		m_height = 50.0f;
+
+		m_texturePath = "";
+	}
+
+	Sprite::Sprite(const std::string & texturePath):
+		m_vbo(0),
+		m_ibo(0),
+		m_vao(0),
+		m_position(glm::vec3(0.0f))
+	{
+		m_color.r = 255;
+		m_color.g = 255;
+		m_color.b = 255;
+		m_color.a = 255;
+
+		m_texturePath = texturePath;
 	}
 
 	Sprite::~Sprite()
 	{
-		glDeleteBuffers(1, &mVBO);
-		glDeleteBuffers(1, &mIBO);
-		glDeleteVertexArrays(1, &mVAO);
+		glDeleteBuffers(1, &m_vbo);
+		glDeleteBuffers(1, &m_ibo);
+		glDeleteVertexArrays(1, &m_vao);
 
-		mVBO = 0;
-		mIBO = 0;
-		mVAO = 0;
+		m_vbo = 0;
+		m_ibo = 0;
+		m_vao = 0;
 	}
 
-	void Sprite::load(const std::string& texturePath)
+	void Sprite::load()
 	{
-		mTexturePath = texturePath;
+		//m_texturePath = texturePath;
 
-		// pass width and height as out parameters;
-		mTexture = ResourceManager::getTexture(texturePath);
-		if (mTexture == nullptr)
+		if (m_texturePath != "")
 		{
-			std::cerr << "texture '" << mTexturePath << "' not loaded! sprite will not be initialized!" << std::endl;
-			return;
+			m_texture = ResourceManager::getTexture(m_texturePath);
+			if (m_texture == nullptr)
+			{
+				std::cerr << "texture '" << m_texturePath << "' not loaded! sprite will be initialized without a texture!" << std::endl;
+			}
+
+			m_width = m_texture->getWidth();
+			m_height = m_texture->getHeight();
 		}
 
-		mWidth = mTexture->getWidth();
-		mHeight = mTexture->getHeight();
-
 		Vertex vertices[4];
-		//// top left
-		//vertices[0].setPosition(-1.0f, 1.0f);
-		//vertices[0].setUV(0.0f, 1.0f);
-		//vertices[0].setColor(255, 255, 255, 255);
-		//
-		//// top right
-		//vertices[1].setPosition(1.0f, 1.0f);
-		//vertices[1].setUV(1.0f, 1.0f);
-		//vertices[1].setColor(255, 255, 255, 255);
-		//
-		//// bottom right
-		//vertices[2].setPosition(1.0f, -1.0f);
-		//vertices[2].setUV(1.0f, 0.0f);
-		//vertices[2].setColor(255, 255, 255, 255);
-		//
-		//// bottom left
-		//vertices[3].setPosition(-1.0f, -1.0f);
-		//vertices[3].setUV(0.0f, 0.0f);
-		//vertices[3].setColor(255, 255, 255, 255);
-
-		float x = mWidth / 2.0f;
-		float y = mHeight / 2.0f;
+		float x = m_width / 2.0f;
+		float y = m_height / 2.0f;
 
 		// top left
 		vertices[0].setPosition(-x, y);
 		vertices[0].setUV(0.0f, 1.0f);
-		vertices[0].setColor(255, 255, 255, 255);
+		vertices[0].setColor(m_color.r, m_color.g, m_color.b, m_color.a);
 
 		// top right
 		vertices[1].setPosition(x, y);
 		vertices[1].setUV(1.0f, 1.0f);
-		vertices[1].setColor(255, 255, 255, 255);
+		vertices[1].setColor(m_color.r, m_color.g, m_color.b, m_color.a);
 
 		// bottom right
 		vertices[2].setPosition(x, -y);
 		vertices[2].setUV(1.0f, 0.0f);
-		vertices[2].setColor(255, 255, 255, 255);
+		vertices[2].setColor(m_color.r, m_color.g, m_color.b, m_color.a);
 
 		// bottom left
 		vertices[3].setPosition(-x, -y);
 		vertices[3].setUV(0.0f, 0.0f);
-		vertices[3].setColor(255, 255, 255, 255);
+		vertices[3].setColor(m_color.r, m_color.g, m_color.b, m_color.a);
 
-		glGenBuffers(1, &mVBO);
-		glGenBuffers(1, &mIBO);
-		glGenVertexArrays(1, &mVAO);
+		glGenBuffers(1, &m_vbo);
+		glGenBuffers(1, &m_ibo);
+		glGenVertexArrays(1, &m_vao);
 
-		glBindVertexArray(mVAO);
+		glBindVertexArray(m_vao);
 
-		glBindBuffer(GL_ARRAY_BUFFER, mVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(mIndices), mIndices, GL_STATIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(m_indices), m_indices, GL_STATIC_DRAW);
 
 		// position attribute
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_TRUE, sizeof(Vertex), nullptr);
@@ -125,10 +147,16 @@ namespace BUZZ
 			return;
 		}
 		*/
-		glBindVertexArray(mVAO);
-		mTexture->bind(0);
+		glBindVertexArray(m_vao);
+
+		if (m_texture != nullptr)
+			m_texture->bind(0);
+		
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
-		mTexture->unbind(0);
+		
+		if (m_texture != nullptr )
+			m_texture->unbind(0);
+		
 		glBindVertexArray(0);
 	}
 }
