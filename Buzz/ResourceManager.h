@@ -15,7 +15,7 @@ namespace BUZZ
 	public:
 		static const std::shared_ptr<Texture2D> getTexture(const std::string& texturePath);
 	private:
-		static std::map<std::string, std::shared_ptr<Texture2D>> mTextureCache;
+		static std::map<std::string, std::shared_ptr<Texture2D>> m_textureCache;
 	};
 }
 

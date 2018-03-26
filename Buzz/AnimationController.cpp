@@ -5,57 +5,57 @@
 namespace BUZZ
 {
 	AnimationController::AnimationController() :
-		mIsAnimationChanged(false)
+		m_isAnimationChanged(false)
 	{
 	}
 
 	AnimationController::~AnimationController()
 	{
-		mAnimations.clear();
+		m_animations.clear();
 	}
 
 	void AnimationController::addAnimation(const std::string& name, std::shared_ptr<Animation> animation)
 	{
-		mActiveAnimation = animation;
+		m_activeAnimation = animation;
 
-		mAnimations.insert(std::pair<std::string, std::shared_ptr<Animation>>(name, animation));
+		m_animations.insert(std::pair<std::string, std::shared_ptr<Animation>>(name, animation));
 	}
 
 	void AnimationController::setActiveAnimation(const std::string & name)
 	{
-		if (mActiveAnimationName == name) return;
+		if (m_activeAnimationName == name) return;
 
-		mActiveAnimationName = name;
-		mIsAnimationChanged = true;
+		m_activeAnimationName = name;
+		m_isAnimationChanged = true;
 	}
 
 	void AnimationController::update(float dt)
 	{
-		if (mAnimations.empty()) return;
+		if (m_animations.empty()) return;
 
-		if (mIsAnimationChanged)
+		if (m_isAnimationChanged)
 		{
-			auto iterator = mAnimations.find(mActiveAnimationName);
-			if (iterator == mAnimations.end())	// not found
+			auto iterator = m_animations.find(m_activeAnimationName);
+			if (iterator == m_animations.end())	// not found
 			{
-				std::cerr << "animation '" << mActiveAnimationName << "' does not exist." << std::endl;
+				std::cerr << "animation '" << m_activeAnimationName << "' does not exist." << std::endl;
 			}
 			else
 			{
-				mActiveAnimation = iterator->second;
-				mActiveAnimation->reset();
+				m_activeAnimation = iterator->second;
+				m_activeAnimation->reset();
 			}
 
-			mIsAnimationChanged = false;
+			m_isAnimationChanged = false;
 		}
 
-		mActiveAnimation->update(dt);
+		m_activeAnimation->update(dt);
 	}
 
 	void AnimationController::draw()
 	{
-		if (mAnimations.empty()) return;
+		if (m_animations.empty()) return;
 
-		mActiveAnimation->draw();
+		m_activeAnimation->draw();
 	}
 }

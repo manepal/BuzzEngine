@@ -20,6 +20,7 @@ namespace BUZZ
 		Sprite();
 		Sprite(GLubyte R, GLubyte g, GLubyte b, GLubyte a);
 		Sprite(const std::string& texturePath);
+		Sprite(const std::string& texturePath, int width, int height);
 
 		~Sprite();
 
@@ -34,6 +35,7 @@ namespace BUZZ
 		std::string m_texturePath;
 		int m_width;
 		int m_height;
+		bool m_preserveTextureDimensions = true;
 
 		std::shared_ptr<Texture2D> m_texture;
 

@@ -30,8 +30,8 @@ namespace BUZZ
 		GLuint getProgram() const;
 
 	private:
-		GLuint mProgramHandle;
-		std::map<std::string, GLint> mUniformLocations;
+		GLuint m_programHandle;
+		std::map<std::string, GLint> m_uniformLocations;
 
 	private:
 		std::string fileToString(const std::string& filename);

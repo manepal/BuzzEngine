@@ -23,11 +23,11 @@ namespace BUZZ
 		void draw();
 
 	private:
-		std::string mActiveAnimationName;
-		bool mIsAnimationChanged;
-		std::shared_ptr<Animation> mActiveAnimation;
+		std::string m_activeAnimationName;
+		bool m_isAnimationChanged;
+		std::shared_ptr<Animation> m_activeAnimation;
 
-		std::map<std::string, std::shared_ptr<Animation>> mAnimations;
+		std::map<std::string, std::shared_ptr<Animation>> m_animations;
 	};
 }
 

@@ -23,13 +23,12 @@ namespace BUZZ
 		bool isFullScreen() const;
 
 	protected:
-		int mWindowWidth;
-		int mWindowHeight;
-		std::string mAppTitle;
-		bool mIsFullscreen;
+		int m_windowWidth;
+		int m_windowHeight;
+		std::string m_appTitle;
+		bool m_isFullscreen;
 
-		BUZZ::ShaderProgram mShaderProgram;
-		BUZZ::Camera mCamera;
+		BUZZ::Camera m_camera;
 	};
 }
 

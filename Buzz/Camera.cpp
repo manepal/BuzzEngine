@@ -9,10 +9,10 @@ const float FOV = 45.0f;
 namespace BUZZ
 {
 	Camera::Camera() :
-		mPosition(glm::vec3(0.0f, 0.0f, 10.0f)),
-		mTarget(glm::vec3(0.0f)),
-		mUp(WORLD_UP),
-		mFOV(FOV)
+		m_position(glm::vec3(0.0f, 0.0f, 10.0f)),
+		m_target(glm::vec3(0.0f)),
+		m_up(WORLD_UP),
+		m_fov(FOV)
 	{
 	}
 
@@ -22,22 +22,32 @@ namespace BUZZ
 
 	const glm::vec3& Camera::getPosition() const
 	{
-		return mPosition;
+		return m_position;
 	}
 
 	const glm::vec3& Camera::getTarget() const
 	{
-		return mTarget;
+		return m_target;
+	}
+
+	const glm::vec2 & Camera::convertToWorldSpace(float x, float y)
+	{
+		float zoom = m_fov / FOV;
+
+		x *= zoom;
+		y *= zoom;
+
+		return glm::vec2(x, y);
 	}
 
 	const glm::mat4& Camera::getViewMatrix() const
 	{
-		return glm::lookAt(mPosition, mTarget, mUp);
+		return glm::lookAt(m_position, m_target, m_up);
 	}
 
 	const glm::mat4& Camera::getPerspective() const
 	{
-		return glm::perspective(mFOV, Window::getInstance()->getWidth() / (float)Window::getInstance()->getHeight(), 0.1f, 100.0f);
+		return glm::perspective(m_fov, Window::getInstance()->getWidth() / (float)Window::getInstance()->getHeight(), 0.1f, 100.0f);
 	}
 
 	const glm::mat4 & Camera::getOrtho()
@@ -45,40 +55,41 @@ namespace BUZZ
 		static float x = Window::getInstance()->getWidth() / 2.0f;
 		static float y = Window::getInstance()->getHeight() / 2.0f;
 
-		float zoom = mFOV / FOV;
+		float zoom = m_fov / FOV;
 
 		return glm::ortho(-x * zoom, x * zoom, -y * zoom, y * zoom, 0.1f, 100.0f);
+		//return glm::ortho(-x, x, -y, y, 0.1f, 100.0f);
 	}
 
 
 
 	void Camera::move(float x, float y)
 	{
-		mPosition.x += x;
-		mPosition.y += y;
+		m_position.x += x;
+		m_position.y += y;
 
 		updateCameraVectors();
 	}
 
 	void Camera::zoom(float zoom)
 	{
-		mFOV += zoom;
+		m_fov += zoom;
 	}
 
 	void Camera::setPosition(const glm::vec3 & position)
 	{
-		mPosition = position;
+		m_position = position;
 		// update the camera vector to calculate new target
 		updateCameraVectors();
 	}
 
 	void Camera::setFOV(float fov)
 	{
-		mFOV = fov;
+		m_fov = fov;
 	}
 
 	void Camera::updateCameraVectors()
 	{
-		mTarget = glm::vec3(mPosition.x, mPosition.y, 0.0f);
+		m_target = glm::vec3(m_position.x, m_position.y, 0.0f);
 	}
 }

@@ -61,6 +61,23 @@ namespace BUZZ
 		m_texturePath = texturePath;
 	}
 
+	Sprite::Sprite(const std::string & texturePath, int width, int height):
+		m_vbo(0),
+		m_ibo(0),
+		m_vao(0),
+		m_position(glm::vec3(0.0f))
+	{
+		m_color.r = 255;
+		m_color.g = 255;
+		m_color.b = 255;
+		m_color.a = 255;
+
+		m_preserveTextureDimensions = false;
+		m_texturePath = texturePath;
+		m_width = width;
+		m_height = height;
+	}
+
 	Sprite::~Sprite()
 	{
 		glDeleteBuffers(1, &m_vbo);
@@ -84,8 +101,11 @@ namespace BUZZ
 				std::cerr << "texture '" << m_texturePath << "' not loaded! sprite will be initialized without a texture!" << std::endl;
 			}
 
-			m_width = m_texture->getWidth();
-			m_height = m_texture->getHeight();
+			if (m_preserveTextureDimensions)
+			{
+				m_width = m_texture->getWidth();
+				m_height = m_texture->getHeight();
+			}
 		}
 
 		Vertex vertices[4];
@@ -93,24 +113,24 @@ namespace BUZZ
 		float y = m_height / 2.0f;
 
 		// top left
-		vertices[0].setPosition(-x, y);
-		vertices[0].setUV(0.0f, 1.0f);
-		vertices[0].setColor(m_color.r, m_color.g, m_color.b, m_color.a);
+		vertices[0].position.set(-x, y);
+		vertices[0].uv.set(0.0f, 1.0f);
+		vertices[0].color.set(m_color.r, m_color.g, m_color.b, m_color.a);
 
 		// top right
-		vertices[1].setPosition(x, y);
-		vertices[1].setUV(1.0f, 1.0f);
-		vertices[1].setColor(m_color.r, m_color.g, m_color.b, m_color.a);
+		vertices[1].position.set(x, y);
+		vertices[1].uv.set(1.0f, 1.0f);
+		vertices[1].color.set(m_color.r, m_color.g, m_color.b, m_color.a);
 
 		// bottom right
-		vertices[2].setPosition(x, -y);
-		vertices[2].setUV(1.0f, 0.0f);
-		vertices[2].setColor(m_color.r, m_color.g, m_color.b, m_color.a);
+		vertices[2].position.set(x, -y);
+		vertices[2].uv.set(1.0f, 0.0f);
+		vertices[2].color.set(m_color.r, m_color.g, m_color.b, m_color.a);
 
 		// bottom left
-		vertices[3].setPosition(-x, -y);
-		vertices[3].setUV(0.0f, 0.0f);
-		vertices[3].setColor(m_color.r, m_color.g, m_color.b, m_color.a);
+		vertices[3].position.set(-x, -y);
+		vertices[3].uv.set(0.0f, 0.0f);
+		vertices[3].color.set(m_color.r, m_color.g, m_color.b, m_color.a);
 
 		glGenBuffers(1, &m_vbo);
 		glGenBuffers(1, &m_ibo);

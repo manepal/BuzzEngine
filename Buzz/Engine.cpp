@@ -15,7 +15,7 @@ namespace BUZZ
 
 	bool Engine::startup(IApplication * application)
 	{
-		mApplication = application;
+		m_application = application;
 
 		if (!glfwInit())
 		{
@@ -23,7 +23,7 @@ namespace BUZZ
 			return false;
 		}
 
-		if (!mWindow->initialize(mApplication->getTitle(), mApplication->getWidth(), mApplication->getHeight(), mApplication->isFullScreen()))
+		if (!m_window->initialize(m_application->getTitle(), m_application->getWidth(), m_application->getHeight(), m_application->isFullScreen()))
 		{
 			shutdown();
 			return false;
@@ -40,9 +40,9 @@ namespace BUZZ
 	}
 	void Engine::run()
 	{
-		mApplication->startup();
+		m_application->startup();
 
-		while (!glfwWindowShouldClose(mWindow->getWindowHandle()))
+		while (!glfwWindowShouldClose(m_window->getWindowHandle()))
 		{
 			glfwPollEvents();
 
@@ -51,22 +51,22 @@ namespace BUZZ
 			static float previousTime = glfwGetTime();
 			do
 			{
-				mCurrentTime = glfwGetTime();
+				m_currentTime = glfwGetTime();
 				// calculate delta time
-				mDeltaTime = mCurrentTime - previousTime;
-			} while (mDeltaTime < 1.0f / MAX_FPS);
+				m_deltaTime = m_currentTime - previousTime;
+			} while (m_deltaTime < 1.0f / MAX_FPS);
 
 			calculateFPS();
 			showFPS(0.5f);
-			previousTime = mCurrentTime;
+			previousTime = m_currentTime;
 			// ------------------------------------------
 
-			mApplication->update(mDeltaTime);
+			m_application->update(m_deltaTime);
 			// draw everything on the screen
 			render();
 		}
 
-		mApplication->shutdown();
+		m_application->shutdown();
 		shutdown();
 	}
 
@@ -83,7 +83,7 @@ namespace BUZZ
 
 		static float previousTime = glfwGetTime();
 
-		frameTimes[currentFrame % NUM_SAMPLES] = mDeltaTime;
+		frameTimes[currentFrame % NUM_SAMPLES] = m_deltaTime;
 
 		int numFrames;
 		currentFrame++;
@@ -106,11 +106,11 @@ namespace BUZZ
 		if (frameTimeAverage > 0)
 		{
 			// time  is in seconds divide 1 frame by average time taken to render 1 frame
-			mFPS = 1.0f / frameTimeAverage;
+			m_fps = 1.0f / frameTimeAverage;
 		}
 		else
 		{
-			mFPS = 0.0f;
+			m_fps = 0.0f;
 		}
 	}
 
@@ -118,17 +118,17 @@ namespace BUZZ
 	{
 		// display fps twice every second
 		static float elapsedTime = 0.0f;
-		elapsedTime += mDeltaTime;
+		elapsedTime += m_deltaTime;
 
 		if (elapsedTime >= interval)
 		{
 			std::ostringstream outs;
 			outs.precision(3);
 			outs << std::fixed
-				<< ": " << mWindow->getWidth() << "x" << mWindow->getHeight() << "    "
-				<< "FPS: " << mFPS << "   ";
+				<< ": " << m_window->getWidth() << "x" << m_window->getHeight() << "    "
+				<< "FPS: " << m_fps << "   ";
 
-			mWindow->appendTitle(outs.str());
+			m_window->appendTitle(outs.str());
 
 			elapsedTime = 0.0f;
 		}
@@ -141,8 +141,8 @@ namespace BUZZ
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		mApplication->render();
+		m_application->render();
 
-		glfwSwapBuffers(mWindow->getWindowHandle());
+		glfwSwapBuffers(m_window->getWindowHandle());
 	}
 }

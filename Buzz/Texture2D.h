@@ -21,9 +21,9 @@ namespace BUZZ
 		int getHeight();
 
 	private:
-		GLuint mTexture;
-		int mWidth;
-		int mHeight;
+		GLuint m_texture;
+		int m_width;
+		int m_height;
 	};
 }
 

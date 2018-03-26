@@ -23,16 +23,18 @@ namespace BUZZ
 		const glm::vec3& getPosition() const;
 		const glm::vec3& getTarget() const;
 
+		const glm::vec2& convertToWorldSpace(float x, float y);
+
 		// setters
 		void setPosition(const glm::vec3& position);
 		void setFOV(float fov);
 
 	private:
-		glm::vec3 mPosition;
-		glm::vec3 mTarget;
-		glm::vec3 mUp;
+		glm::vec3 m_position;
+		glm::vec3 m_target;
+		glm::vec3 m_up;
 
-		float mFOV;
+		float m_fov;
 
 		void updateCameraVectors();
 	};

@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "Input.h"
+
 namespace BUZZ
 {
 	Window::Window()
@@ -9,7 +11,7 @@ namespace BUZZ
 
 	Window::~Window()
 	{
-		glfwDestroyWindow(mWindow);
+		glfwDestroyWindow(m_window);
 	}
 
 	Window* Window::getInstance()
@@ -21,39 +23,40 @@ namespace BUZZ
 
 	bool Window::initialize(const std::string&  title, int width, int height, bool fullscreen)
 	{
-		mTitle = title;
-		mWidth = width;
-		mHeight = height;
-		mIsFullscreen = fullscreen;
+		m_title = title;
+		m_width = width;
+		m_height = height;
+		m_isFullscreen = fullscreen;
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
 		GLFWmonitor* monitor = nullptr;
 
-		if (mIsFullscreen)
+		if (m_isFullscreen)
 		{
 			monitor = glfwGetPrimaryMonitor();
 			const GLFWvidmode* vMode = glfwGetVideoMode(monitor);
 
-			mWidth = vMode->width;
-			mHeight = vMode->height;
+			m_width = vMode->width;
+			m_height = vMode->height;
 		}
 		// create window
-		mWindow = glfwCreateWindow(mWidth, mHeight, mTitle.c_str(), monitor, nullptr);
-		if (mWindow == nullptr)
+		m_window = glfwCreateWindow(m_width, m_height, m_title.c_str(), monitor, nullptr);
+		if (m_window == nullptr)
 		{
 			std::cerr << "failed to create window!" << std::endl;
 			return false;
 		}
 
-		glfwMakeContextCurrent(mWindow);
+		glfwMakeContextCurrent(m_window);
 
 		setWindowCallbacks();
 
-		glViewport(0, 0, mWidth, mHeight);
+		glViewport(0, 0, m_width, m_height);
 
 		return true;
 	}
@@ -61,76 +64,56 @@ namespace BUZZ
 
 	void Window::close()
 	{
-		glfwSetWindowShouldClose(mWindow, GL_TRUE);
+		glfwSetWindowShouldClose(m_window, GL_TRUE);
 	}
 
 	GLFWwindow * Window::getWindowHandle() const
 	{
-		return mWindow;
+		return m_window;
 	}
 
 	int Window::getWidth() const
 	{
-		return mWidth;
+		return m_width;
 	}
 
 	int Window::getHeight() const
 	{
-		return mHeight;
+		return m_height;
 	}
 
 	void Window::setTitle(const std::string & title)
 	{
-		mTitle = title;
+		m_title = title;
 
-		glfwSetWindowTitle(mWindow, mTitle.c_str());
+		glfwSetWindowTitle(m_window, m_title.c_str());
 	}
 
 	void Window::setWindowSize(int width, int height)
 	{
-		mWidth = width;
-		mHeight = height;
+		m_width = width;
+		m_height = height;
 	}
 
 	void Window::appendTitle(const std::string & str)
 	{
-		std::string newTitle = mTitle + str;
+		std::string newTitle = m_title + str;
 
-		glfwSetWindowTitle(mWindow, newTitle.c_str());
+		glfwSetWindowTitle(m_window, newTitle.c_str());
 	}
 
 	void Window::setWindowCallbacks()
 	{
-		glfwSetKeyCallback(mWindow, glfw_OnKey);
-		glfwSetCursorPosCallback(mWindow, glfw_OnMouseMove);
-		glfwSetScrollCallback(mWindow, glfw_OnMouseScroll);
-		glfwSetWindowSizeCallback(mWindow, glfw_OnFrameBufferSize);
-	}
-
-	void Window::glfw_OnKey(GLFWwindow * window, int key, int scancode, int action, int mode)
-	{
-		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		{
-			glfwSetWindowShouldClose(window, GL_TRUE);
-		}
-	}
-
-	void Window::glfw_OnMouseMove(GLFWwindow * window, double posX, double posY)
-	{
-
-		//std::cout << "on mouse move." << std::endl;
-	}
-
-	void Window::glfw_OnMouseScroll(GLFWwindow * window, double deltaX, double deltaY)
-	{
-
-		//std::cout << "on mouse scroll." << std::endl;
+		glfwSetWindowSizeCallback(m_window, glfw_OnFrameBufferSize);
+		Input::setKeyCallbacks();
 	}
 
 	void Window::glfw_OnFrameBufferSize(GLFWwindow * window, int width, int height)
 	{
-		Window::getInstance()->setWindowSize(width, height);;
+		Window::getInstance()->setWindowSize(width, height);
 
-		glViewport(0, 0, width, height);
+		//std::cout << "Window resized." << std::endl;
+
+		glViewport(0, 0, Window::getInstance()->getWidth(), Window::getInstance()->getHeight());
 	}
 }

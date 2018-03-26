@@ -4,21 +4,21 @@ namespace BUZZ
 {
 	const std::string & IApplication::getTitle() const
 	{
-		return mAppTitle;
+		return m_appTitle;
 	}
 
 	int IApplication::getWidth() const
 	{
-		return mWindowWidth;
+		return m_windowWidth;
 	}
 
 	int IApplication::getHeight() const
 	{
-		return mWindowHeight;
+		return m_windowHeight;
 	}
 
 	bool IApplication::isFullScreen() const
 	{
-		return mIsFullscreen;
+		return m_isFullscreen;
 	}
 }

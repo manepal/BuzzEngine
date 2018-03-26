@@ -8,13 +8,13 @@
 namespace BUZZ
 {
 	ShaderProgram::ShaderProgram() :
-		mProgramHandle(0)
+		m_programHandle(0)
 	{
 	}
 
 	ShaderProgram::~ShaderProgram()
 	{
-		glDeleteProgram(mProgramHandle);
+		glDeleteProgram(m_programHandle);
 	}
 
 	bool ShaderProgram::loadShaders(const char * vsFilename, const char * fsFilename)
@@ -36,26 +36,26 @@ namespace BUZZ
 		glCompileShader(fs);
 		checkCompilationErrors(fs, fsFilename);
 
-		mProgramHandle = glCreateProgram();
-		glAttachShader(mProgramHandle, vs);
-		glAttachShader(mProgramHandle, fs);
-		glLinkProgram(mProgramHandle);
+		m_programHandle = glCreateProgram();
+		glAttachShader(m_programHandle, vs);
+		glAttachShader(m_programHandle, fs);
+		glLinkProgram(m_programHandle);
 
 		checkLinkErrors();
 
 		glDeleteShader(vs);
 		glDeleteShader(vs);
 
-		mUniformLocations.clear();
+		m_uniformLocations.clear();
 
 		return true;
 	}
 
 	void ShaderProgram::use()
 	{
-		if (mProgramHandle > 0)
+		if (m_programHandle > 0)
 		{
-			glUseProgram(mProgramHandle);
+			glUseProgram(m_programHandle);
 		}
 	}
 
@@ -103,19 +103,19 @@ namespace BUZZ
 
 	GLint ShaderProgram::getUniformLocation(const GLchar * name)
 	{
-		std::map<std::string, GLint>::iterator it = mUniformLocations.find(name);
+		std::map<std::string, GLint>::iterator it = m_uniformLocations.find(name);
 
-		if (it == mUniformLocations.end())
+		if (it == m_uniformLocations.end())
 		{
-			mUniformLocations[name] = glGetUniformLocation(mProgramHandle, name);
+			m_uniformLocations[name] = glGetUniformLocation(m_programHandle, name);
 		}
 
-		return mUniformLocations[name];
+		return m_uniformLocations[name];
 	}
 
 	GLuint ShaderProgram::getProgram() const
 	{
-		return mProgramHandle;
+		return m_programHandle;
 	}
 
 	std::string ShaderProgram::fileToString(const std::string & filename)
@@ -162,14 +162,14 @@ namespace BUZZ
 	{
 		int status = 0;
 
-		glGetProgramiv(mProgramHandle, GL_LINK_STATUS, &status);
+		glGetProgramiv(m_programHandle, GL_LINK_STATUS, &status);
 		if (status == GL_FALSE)
 		{
 			int length = 0;
-			glGetProgramiv(mProgramHandle, GL_INFO_LOG_LENGTH, &length);
+			glGetProgramiv(m_programHandle, GL_INFO_LOG_LENGTH, &length);
 
 			std::string errorLog(length, ' ');
-			glGetProgramInfoLog(mProgramHandle, length, &length, &errorLog[0]);
+			glGetProgramInfoLog(m_programHandle, length, &length, &errorLog[0]);
 			std::cerr << "failed to link shader program:\n" << errorLog << std::endl;
 		}
 	}

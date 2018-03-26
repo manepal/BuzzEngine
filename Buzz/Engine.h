@@ -23,16 +23,16 @@ namespace BUZZ
 
 	private:
 		Engine() {
-			mWindow = Window::getInstance();
+			m_window = Window::getInstance();
 		}
 
-		IApplication* mApplication;
-		Window* mWindow;
+		IApplication* m_application;
+		Window* m_window;
 
-		float mFPS;
-		float mDeltaTime;
-		float mCurrentTime;
-		float mPreviousTime;
+		float m_fps;
+		float m_deltaTime;
+		float m_currentTime;
+		float m_previousTime;
 
 		void calculateFPS();
 		void showFPS(float interval);

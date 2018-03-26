@@ -33,21 +33,16 @@ namespace BUZZ
 		Window();
 		~Window();
 
-	private:
-		GLFWwindow * mWindow;
-
-		std::string mTitle;
-		int mWidth;
-		int mHeight;
-		bool mIsFullscreen;
-
 		void setWindowCallbacks();
-
-		// glfw window callbacks
-		static void glfw_OnKey(GLFWwindow* window, int key, int scancode, int action, int mode);
-		static void glfw_OnMouseMove(GLFWwindow* window, double posX, double posY);
-		static void glfw_OnMouseScroll(GLFWwindow* window, double deltaX, double deltaY);
 		static void glfw_OnFrameBufferSize(GLFWwindow* window, int width, int height);
+	
+	private:
+		GLFWwindow * m_window;
+
+		std::string m_title;
+		int m_width;
+		int m_height;
+		bool m_isFullscreen;
 	};
 }
 

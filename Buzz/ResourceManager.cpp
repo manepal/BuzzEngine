@@ -4,14 +4,14 @@
 
 namespace BUZZ
 {
-	std::map<std::string, std::shared_ptr<Texture2D>> ResourceManager::mTextureCache;
+	std::map<std::string, std::shared_ptr<Texture2D>> ResourceManager::m_textureCache;
 
 	const std::shared_ptr<Texture2D> ResourceManager::getTexture(const std::string & texturePath)
 	{
 		// look for texture in the map
-		auto iterator = mTextureCache.find(texturePath);
+		auto iterator = m_textureCache.find(texturePath);
 
-		if (iterator != mTextureCache.end()) // found
+		if (iterator != m_textureCache.end()) // found
 		{
 			std::cout << "'" << texturePath << "' loaded from texture cache." << std::endl;
 			return iterator->second;
@@ -25,7 +25,7 @@ namespace BUZZ
 			return nullptr;
 		}
 
-		mTextureCache.insert(std::pair<std::string, std::shared_ptr<Texture2D>>(texturePath, newTexture));
+		m_textureCache.insert(std::pair<std::string, std::shared_ptr<Texture2D>>(texturePath, newTexture));
 
 		return newTexture;
 	}

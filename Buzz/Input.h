@@ -4,6 +4,7 @@
 
 #include <GL\glew.h>
 #include <GLFW\\glfw3.h>
+#include <glm\glm.hpp>
 
 
 // redefine  glfw keys
@@ -213,6 +214,25 @@ namespace BUZZ
 	public:
 		static bool getKeyDown(GLushort key);
 		static bool getKeyUp(GLushort key);
+
+		static bool getMouseDown(GLushort button);
+		static bool getMouseUp(GLushort button);
+
+
+		static const glm::vec2& getCursorPos();
+		
+		static void setKeyCallbacks();
+
+	private:
+		//static glm::vec2 m_cursorPos;
+		static int m_currentState;
+		static int m_previousState;
+
+		// glfw window callbacks
+		static void onKey(GLFWwindow* window, int key, int scancode, int action, int mode);
+		static void onMouseMove(GLFWwindow* window, double posX, double posY);
+		static void onMouseButton(GLFWwindow* window, int button, int action, int mods);
+		static void onMouseScroll(GLFWwindow* window, double deltaX, double deltaY);
 	};
 }
 
