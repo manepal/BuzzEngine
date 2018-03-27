@@ -34,8 +34,8 @@ namespace BUZZ
 	{
 		float zoom = m_fov / FOV;
 
-		x *= zoom;
-		y *= zoom;
+		x = x * zoom + m_position.x;
+		y = y * zoom + m_position.y;
 
 		return glm::vec2(x, y);
 	}

@@ -59,10 +59,10 @@ namespace BUZZ
 		}
 	}
 
-	void ShaderProgram::unUse()
-	{
-		glUseProgram(0);
-	}
+	//void ShaderProgram::unUse()
+	//{
+	//	glUseProgram(0);
+	//}
 
 	void ShaderProgram::setUniformSampler(const GLchar * name, GLint& slot)
 	{

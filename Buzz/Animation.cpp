@@ -49,6 +49,6 @@ namespace BUZZ
 
 	void Animation::draw()
 	{
-		m_frames[m_currentFrameIndex]->draw();
+		//m_frames[m_currentFrameIndex]->draw();
 	}
 }

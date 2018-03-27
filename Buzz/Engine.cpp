@@ -16,6 +16,7 @@ namespace BUZZ
 	bool Engine::startup(IApplication * application)
 	{
 		m_application = application;
+		spriteBatch = std::make_shared<SpriteBatch>();
 
 		if (!glfwInit())
 		{
@@ -35,6 +36,8 @@ namespace BUZZ
 			std::cerr << "failed to initialize GLEW!" << std::endl;
 			return false;
 		}
+
+		spriteBatch->init();
 
 		return true;
 	}
@@ -68,6 +71,21 @@ namespace BUZZ
 
 		m_application->shutdown();
 		shutdown();
+	}
+
+	void Engine::render()
+	{
+		glClearColor(0.0f, 0.5f, 0.8f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		spriteBatch->begin();
+		m_application->render();
+		spriteBatch->end();
+		spriteBatch->render();
+
+		glfwSwapBuffers(m_window->getWindowHandle());
 	}
 
 	void Engine::shutdown()
@@ -132,17 +150,5 @@ namespace BUZZ
 
 			elapsedTime = 0.0f;
 		}
-	}
-
-	void Engine::render()
-	{
-		glClearColor(0.0f, 0.5f, 0.8f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		m_application->render();
-
-		glfwSwapBuffers(m_window->getWindowHandle());
 	}
 }

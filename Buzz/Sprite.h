@@ -10,10 +10,18 @@
 
 #include "Texture2D.h"
 #include "Vertex.h"
+#include "SpriteBatch.h"
 
 
 namespace BUZZ
 {
+	class Glyph
+	{
+	public:
+		GLuint textureID;
+		Vertex vertices[6];
+	};
+
 	class Sprite
 	{
 	public:
@@ -25,7 +33,7 @@ namespace BUZZ
 		~Sprite();
 
 		void load();
-		void draw();
+		void draw(const glm::mat4& model);
 
 		// getters
 		int getWidth() const { return m_width; }

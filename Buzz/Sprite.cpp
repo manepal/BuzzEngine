@@ -1,18 +1,14 @@
 #include "Sprite.h"
 
 #include <iostream>
+#include <glm\gtc\matrix_transform.hpp>
 
 #include "Vertex.h"
 #include "ResourceManager.h"
-
+#include "Engine.h"
 
 namespace BUZZ
 {
-	GLushort Sprite::m_indices[6] = {
-		0, 1, 2,
-		2, 3, 0
-	};
-
 	Sprite::Sprite() :
 		m_vbo(0),
 		m_ibo(0),
@@ -107,76 +103,49 @@ namespace BUZZ
 				m_height = m_texture->getHeight();
 			}
 		}
+	}
 
-		Vertex vertices[4];
+	void Sprite::draw(const glm::mat4& model)
+	{
+		Glyph glyph;
+		glyph.textureID = m_texture->getId();
+
 		float x = m_width / 2.0f;
 		float y = m_height / 2.0f;
 
-		// top left
-		vertices[0].position.set(-x, y);
-		vertices[0].uv.set(0.0f, 1.0f);
-		vertices[0].color.set(m_color.r, m_color.g, m_color.b, m_color.a);
+		glm::vec4 positions[6];
+		positions[0] = glm::vec4(-x, y, 0.0f, 1.0f);
+		positions[1] = glm::vec4(x, y, 0.0f, 1.0f);
+		positions[2] = glm::vec4(x, -y, 0.0f, 1.0f);
+		positions[3] = positions[2];
+		positions[4] = glm::vec4(-x, -y, 0.0f, 1.0f);
+		positions[5] = positions[0];
 
-		// top right
-		vertices[1].position.set(x, y);
-		vertices[1].uv.set(1.0f, 1.0f);
-		vertices[1].color.set(m_color.r, m_color.g, m_color.b, m_color.a);
-
-		// bottom right
-		vertices[2].position.set(x, -y);
-		vertices[2].uv.set(1.0f, 0.0f);
-		vertices[2].color.set(m_color.r, m_color.g, m_color.b, m_color.a);
-
-		// bottom left
-		vertices[3].position.set(-x, -y);
-		vertices[3].uv.set(0.0f, 0.0f);
-		vertices[3].color.set(m_color.r, m_color.g, m_color.b, m_color.a);
-
-		glGenBuffers(1, &m_vbo);
-		glGenBuffers(1, &m_ibo);
-		glGenVertexArrays(1, &m_vao);
-
-		glBindVertexArray(m_vao);
-
-		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(m_indices), m_indices, GL_STATIC_DRAW);
-
-		// position attribute
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_TRUE, sizeof(Vertex), nullptr);
-		glEnableVertexAttribArray(0);
-
-		// texcoords attribute
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(sizeof(Position)));
-		glEnableVertexAttribArray(1);
-
-		// color attribute
-		glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (GLvoid*)(sizeof(Position) + sizeof(UV)));
-		glEnableVertexAttribArray(2);
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
-	}
-
-	void Sprite::draw()
-	{
-		/*if (mTexture == nullptr)
+		for (int i = 0; i < 6; i++)
 		{
-			return;
+			glm::vec4 pos = positions[i];
+			pos = model * pos;
+			glyph.vertices[i].position.set(pos.x, pos.y);
 		}
-		*/
-		glBindVertexArray(m_vao);
 
-		if (m_texture != nullptr)
-			m_texture->bind(0);
-		
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
-		
-		if (m_texture != nullptr )
-			m_texture->unbind(0);
-		
-		glBindVertexArray(0);
+		glyph.vertices[0].uv.set(0.0f, 1.0f);
+		glyph.vertices[0].color.set(m_color.r, m_color.g, m_color.b, m_color.a);
+
+		glyph.vertices[1].uv.set(1.0f, 1.0f);
+		glyph.vertices[1].color.set(m_color.r, m_color.g, m_color.b, m_color.a);
+
+		glyph.vertices[2].uv.set(1.0f, 0.0f);
+		glyph.vertices[2].color.set(m_color.r, m_color.g, m_color.b, m_color.a);
+
+		glyph.vertices[3].uv.set(1.0f, 0.0f);
+		glyph.vertices[3].color.set(m_color.r, m_color.g, m_color.b, m_color.a);
+
+		glyph.vertices[4].uv.set(0.0f, 0.0f);
+		glyph.vertices[4].color.set(m_color.r, m_color.g, m_color.b, m_color.a);
+
+		glyph.vertices[5].uv.set(0.0f, 1.0f);
+		glyph.vertices[5].color.set(m_color.r, m_color.g, m_color.b, m_color.a);
+
+		Engine::getInstance()->spriteBatch->addGlyph(glyph);
 	}
 }

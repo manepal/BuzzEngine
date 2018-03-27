@@ -6,6 +6,7 @@
 
 #include "ShaderProgram.h"
 #include "Camera.h"
+#include "SpriteBatch.h"
 
 namespace BUZZ
 {
@@ -28,7 +29,7 @@ namespace BUZZ
 		std::string m_appTitle;
 		bool m_isFullscreen;
 
-		BUZZ::Camera m_camera;
+		Camera m_camera;
 	};
 }
 

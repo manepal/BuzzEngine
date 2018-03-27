@@ -16,6 +16,8 @@ namespace BUZZ
 		void bind(GLuint texUnit = 0);
 		void unbind(GLuint texUnit = 0);
 
+		GLuint getId() { return m_texture; }
+
 		// getters
 		int getWidth();
 		int getHeight();

@@ -6,15 +6,19 @@
 #include <GLFW\glfw3.h>
 
 #include <string>
+#include <memory>
 
 #include "IApplication.h"
 #include "Window.h"
+#include "SpriteBatch.h"
 
 namespace BUZZ
 {
 	class Engine
 	{
 	public:
+		std::shared_ptr<SpriteBatch> spriteBatch;
+
 		static Engine* getInstance();
 
 		bool startup(IApplication* application);
