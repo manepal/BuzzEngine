@@ -129,22 +129,11 @@ namespace BUZZ
 		}
 
 		glyph.vertices[0].uv.set(0.0f, 1.0f);
-		glyph.vertices[0].color.set(m_color.r, m_color.g, m_color.b, m_color.a);
-
 		glyph.vertices[1].uv.set(1.0f, 1.0f);
-		glyph.vertices[1].color.set(m_color.r, m_color.g, m_color.b, m_color.a);
-
 		glyph.vertices[2].uv.set(1.0f, 0.0f);
-		glyph.vertices[2].color.set(m_color.r, m_color.g, m_color.b, m_color.a);
-
 		glyph.vertices[3].uv.set(1.0f, 0.0f);
-		glyph.vertices[3].color.set(m_color.r, m_color.g, m_color.b, m_color.a);
-
 		glyph.vertices[4].uv.set(0.0f, 0.0f);
-		glyph.vertices[4].color.set(m_color.r, m_color.g, m_color.b, m_color.a);
-
 		glyph.vertices[5].uv.set(0.0f, 1.0f);
-		glyph.vertices[5].color.set(m_color.r, m_color.g, m_color.b, m_color.a);
 
 		Engine::getInstance()->spriteBatch->addGlyph(glyph);
 	}

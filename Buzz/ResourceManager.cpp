@@ -13,11 +13,11 @@ namespace BUZZ
 
 		if (iterator != m_textureCache.end()) // found
 		{
-			std::cout << "'" << texturePath << "' loaded from texture cache." << std::endl;
+			//std::cout << "'" << texturePath << "' loaded from texture cache." << std::endl;
 			return iterator->second;
 		}
 
-		std::cout << "'" << texturePath << "' loaded from disk." << std::endl;
+		//std::cout << "'" << texturePath << "' loaded from disk." << std::endl;
 
 		std::shared_ptr<Texture2D> newTexture(new Texture2D);
 		if (newTexture->loadTexture(texturePath) == false)

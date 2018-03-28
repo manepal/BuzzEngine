@@ -50,7 +50,6 @@ namespace BUZZ
 	{
 		Position position;
 		UV uv;
-		Color color;
 	};
 
 	struct DebugVertex
