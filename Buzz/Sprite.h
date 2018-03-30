@@ -15,11 +15,16 @@
 
 namespace BUZZ
 {
-	class Glyph
+	struct Glyph
 	{
-	public:
 		GLuint textureID;
 		Vertex vertices[6];
+
+		// this is useful for sorting
+		bool operator < (const Glyph& glyph) const
+		{
+			return (textureID < glyph.textureID);
+		}
 	};
 
 	class Sprite

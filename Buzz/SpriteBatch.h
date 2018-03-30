@@ -5,13 +5,22 @@
 #include <GL\glew.h>
 
 #include <vector>
+#include <memory>
 
 #include "Vertex.h"
 #include "Sprite.h"
 
 namespace BUZZ
 {
-	class Glyph;
+	struct Glyph;
+
+	struct RenderBatch
+	{
+	public:
+		int offset;
+		int vertexCount;
+		GLuint textureID;
+	};
 
 	class SpriteBatch
 	{
@@ -30,12 +39,14 @@ namespace BUZZ
 		GLuint m_vao;
 
 		std::vector<Glyph> m_glyphs;
+		std::vector<RenderBatch> m_batches;
 
 	private:
 		friend class Sprite;
 
 		void createVertexArray();
 		void addGlyph(const Glyph& glyph);
+		void createRenderBatches();
 	};
 }
 

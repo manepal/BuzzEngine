@@ -1,5 +1,6 @@
 #include "SpriteBatch.h"
 
+#include <algorithm>
 
 namespace BUZZ
 {
@@ -25,31 +26,15 @@ namespace BUZZ
 	void SpriteBatch::begin()
 	{
 		m_glyphs.clear();
+		m_batches.clear();
 	}
 
 	void SpriteBatch::end()
 	{
 		if (m_glyphs.empty()) return;
 
-		std::vector<Vertex> vertices;
-		vertices.resize(m_glyphs.size() * 6);
-
-		int cv = 0;
-
-		for (auto g : m_glyphs)
-		{
-			vertices[cv++] = g.vertices[0];
-			vertices[cv++] = g.vertices[1];
-			vertices[cv++] = g.vertices[2];
-			vertices[cv++] = g.vertices[3];
-			vertices[cv++] = g.vertices[4];
-			vertices[cv++] = g.vertices[5];
-		}
-
-		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), nullptr, GL_DYNAMIC_DRAW);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(Vertex), vertices.data());
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		std::sort(m_glyphs.begin(), m_glyphs.end());
+		createRenderBatches();
 	}
 
 	void SpriteBatch::render()
@@ -58,9 +43,12 @@ namespace BUZZ
 
 		glBindVertexArray(m_vao);
 
-		glBindTexture(GL_TEXTURE_2D, m_glyphs[0].textureID);
-		//glDrawElements(GL_TRIANGLES, m_glyphs.size() * 6, GL_UNSIGNED_SHORT, 0);
-		glDrawArrays(GL_TRIANGLES, 0, m_glyphs.size() * 6);
+		for (auto batch : m_batches)
+		{
+			glBindTexture(GL_TEXTURE_2D, batch.textureID);
+			//glDrawElements(GL_TRIANGLES, m_glyphs.size() * 6, GL_UNSIGNED_SHORT, 0);
+			glDrawArrays(GL_TRIANGLES, batch.offset, batch.vertexCount);
+		}
 
 		glBindVertexArray(0);
 	}
@@ -109,5 +97,48 @@ namespace BUZZ
 	void SpriteBatch::addGlyph(const Glyph& glyph)
 	{
 		m_glyphs.push_back(glyph);
+	}
+
+	void SpriteBatch::createRenderBatches()
+	{
+		std::vector<Vertex> vertices;
+		vertices.resize(m_glyphs.size() * 6);
+
+		int cv = 0;
+		RenderBatch batch;
+		batch.textureID = m_glyphs[0].textureID;
+		batch.offset = 0;
+		batch.vertexCount = 0;
+
+		for (auto g : m_glyphs)
+		{
+			vertices[cv++] = g.vertices[0];
+			vertices[cv++] = g.vertices[1];
+			vertices[cv++] = g.vertices[2];
+			vertices[cv++] = g.vertices[3];
+			vertices[cv++] = g.vertices[4];
+			vertices[cv++] = g.vertices[5];
+
+			if (batch.textureID == g.textureID)
+			{
+				batch.vertexCount += 6;
+			}
+			else
+			{
+				m_batches.push_back(batch);
+				batch.offset = batch.vertexCount;
+				batch.textureID = g.textureID;
+				// reset the vertex count to 6
+				batch.vertexCount = 6;
+			}
+		}
+		// push the last batch
+		m_batches.push_back(batch);
+
+		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), nullptr, GL_DYNAMIC_DRAW);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(Vertex), vertices.data());
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 	}
 }
